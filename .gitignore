@@ -1,0 +1,14 @@
+# Environnement Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Données : jamais sur GitHub (conditions d'utilisation de Freddie Mac)
+data/
+
+# Secrets et configuration locale
+.env
+
+# Fichiers système macOS
+.DS_Store
