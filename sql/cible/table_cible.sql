@@ -33,18 +33,22 @@ SELECT
   p.age_max_observe,
   CASE
     WHEN DATE_ADD(o.first_payment_date, INTERVAL 24 MONTH) > d.derniere_periode THEN NULL
+    WHEN o.harp_indicator = 'Y' THEN NULL
     WHEN p.age_premier_defaut <= 24 THEN 1
     WHEN p.code_sortie = '96' AND p.age_sortie <= 24 THEN NULL
     WHEN p.age_max_observe >= 24 THEN 0
     WHEN p.code_sortie = '01' THEN 0
+    
     ELSE NULL
   END AS defaut_24m,
   CASE
     WHEN DATE_ADD(o.first_payment_date, INTERVAL 24 MONTH) > d.derniere_periode THEN 'exclu_fenetre_incomplete'
+    WHEN o.harp_indicator = 'Y' THEN 'exclu_harp'
     WHEN p.age_premier_defaut <= 24 THEN 'defaut'
     WHEN p.code_sortie = '96' AND p.age_sortie <= 24 THEN 'exclu_rachat_vendeur'
     WHEN p.age_max_observe >= 24 THEN 'sain_observe_24m'
     WHEN p.code_sortie = '01' THEN 'sain_rembourse'
+        
     ELSE 'exclu_autre_sortie'
   END AS statut_cible,
   CASE

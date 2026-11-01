@@ -26,6 +26,8 @@ trois mensualités impayées dépassent toujours ces deux seuils.
   (un remboursement est un comportement sain ; à tester en analyse de sensibilité) ;
 - exclu : rachat par le vendeur (code 96, problème de dossier, pas de crédit) ;
 - exclu : fenêtre de 24 mois incomplète à la date de dernière observation.
+- exclu : prêts HARP (refinancement aidé de 2009-2018, sans étude de l'endettement) :
+  restructurations et non octrois ; 100 % de leurs DTI sont manquants (81 128 prêts sur 2009-2016)
 
 ## Échantillons
 | Usage | Vintages | Raison |
@@ -46,4 +48,4 @@ trois mensualités impayées dépassent toujours ces deux seuils.
 - Contrôle : `sql/cible/controle_cible.sql`
 - Colonnes : `defaut_24m` (1 / 0 / NULL = sans cible),
   `statut_cible` (motif de chaque valeur), `echantillon` (usage du prêt)
-- Ordre des règles : défaut > rachat vendeur > observé 24 mois > remboursé > exclu
+- Ordre des règles : fenêtre incomplète > HARP > défaut > rachat vendeur > observé 24 mois > remboursé
