@@ -10,6 +10,12 @@ SELECT
   c.loan_id,
   c.vintage,
   c.echantillon,
+    -- découpage 70/30 reproductible : le même prêt tombe toujours du même côté
+  CASE
+    WHEN c.echantillon != 'apprentissage_test' THEN c.echantillon
+    WHEN MOD(ABS(FARM_FINGERPRINT(c.loan_id)), 10) < 7 THEN 'apprentissage'
+    ELSE 'test'
+  END AS jeu,
   c.statut_cible,
   c.defaut_24m,
   -- profil de l'emprunteur

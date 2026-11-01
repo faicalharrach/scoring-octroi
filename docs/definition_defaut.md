@@ -18,8 +18,8 @@ trois mensualités impayées dépassent toujours ces deux seuils.
 
 ## Horizon
 24 mois (`loan_age` <= 24). Choix appuyé sur les courbes de vintage :
-à 12 mois, trop peu de défauts (~0,35 %) ; à 24 mois, ~0,8 % sur 2009-2016.
-
+à 12 mois, trop peu de défauts (~0,35 %) ; à 24 mois, 0,50 % sur 2009-2016 hors HARP
+(~1 600 défauts).
 ## Cible
 - 1 : défaut dans les 24 mois ;
 - 0 : prêt observé sans défaut, y compris s'il a été remboursé avant 24 mois
@@ -33,6 +33,8 @@ trois mensualités impayées dépassent toujours ces deux seuils.
 | Usage | Vintages | Raison |
 |---|---|---|
 | Apprentissage / test | 2009-2016 | Période stable, fenêtre close avant le Covid |
+Apprentissage / test : découpage 70/30 par hachage de `loan_id`
+(`FARM_FINGERPRINT`), aléatoire mais reproductible d'une exécution à l'autre.
 | Hors période (out-of-time) | 2017 | Fenêtre close fin 2019, avant le Covid |
 | Étude Covid | 2018-2021 | Reports d'échéance vus comme des retards |
 | Récent (2e hors période) | 2022-2023 | Après le Covid, fenêtre close ; contrôle de stabilité |
