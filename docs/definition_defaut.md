@@ -33,9 +33,17 @@ trois mensualités impayées dépassent toujours ces deux seuils.
 | Apprentissage / test | 2009-2016 | Période stable, fenêtre close avant le Covid |
 | Hors période (out-of-time) | 2017 | Fenêtre close fin 2019, avant le Covid |
 | Étude Covid | 2018-2021 | Reports d'échéance vus comme des retards |
+| Récent (2e hors période) | 2022-2023 | Après le Covid, fenêtre close ; contrôle de stabilité |
 | Production (sans cible) | 2024-2026 | Fenêtre incomplète : scorés, suivis par PSI |
 | Analyse seulement | 1999-2008 | Pratiques d'octroi anciennes, crise de 2008 |
 
 ## Questions ouvertes
 - Codes 15 et 16 (prêts revendus) : défaut seulement s'il y a eu 90 jours de retard avant ?
 - Covid : utiliser `payment_deferral` pour neutraliser les reports d'échéance ?
+
+## Mise en œuvre
+- Requête : `sql/cible/table_cible.sql` -> table `freddie_work.cible`
+- Contrôle : `sql/cible/controle_cible.sql`
+- Colonnes : `defaut_24m` (1 / 0 / NULL = sans cible),
+  `statut_cible` (motif de chaque valeur), `echantillon` (usage du prêt)
+- Ordre des règles : défaut > rachat vendeur > observé 24 mois > remboursé > exclu
