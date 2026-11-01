@@ -18,15 +18,21 @@ WITH par_pret AS (
     MAX(loan_age) AS age_max_observe
   FROM freddie_raw.performance
   GROUP BY loan_id
+),
+derniere_observation AS (
+  SELECT MAX(period) AS derniere_periode FROM freddie_raw.performance
 )
 SELECT
   o.loan_id,
   o.vintage,
+  o.first_payment_date,
+  DATE_ADD(o.first_payment_date, INTERVAL 24 MONTH) AS fin_fenetre,
   p.age_premier_defaut,
   p.code_sortie,
   p.age_sortie,
   p.age_max_observe,
   CASE
+    WHEN DATE_ADD(o.first_payment_date, INTERVAL 24 MONTH) > d.derniere_periode THEN NULL
     WHEN p.age_premier_defaut <= 24 THEN 1
     WHEN p.code_sortie = '96' AND p.age_sortie <= 24 THEN NULL
     WHEN p.age_max_observe >= 24 THEN 0
@@ -34,11 +40,11 @@ SELECT
     ELSE NULL
   END AS defaut_24m,
   CASE
+    WHEN DATE_ADD(o.first_payment_date, INTERVAL 24 MONTH) > d.derniere_periode THEN 'exclu_fenetre_incomplete'
     WHEN p.age_premier_defaut <= 24 THEN 'defaut'
     WHEN p.code_sortie = '96' AND p.age_sortie <= 24 THEN 'exclu_rachat_vendeur'
     WHEN p.age_max_observe >= 24 THEN 'sain_observe_24m'
     WHEN p.code_sortie = '01' THEN 'sain_rembourse'
-    WHEN p.code_sortie IS NULL THEN 'exclu_fenetre_incomplete'
     ELSE 'exclu_autre_sortie'
   END AS statut_cible,
   CASE
@@ -51,3 +57,4 @@ SELECT
   END AS echantillon
 FROM freddie_raw.origination AS o
 LEFT JOIN par_pret AS p USING (loan_id)
+CROSS JOIN derniere_observation AS d
