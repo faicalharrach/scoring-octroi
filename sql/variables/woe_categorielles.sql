@@ -40,8 +40,8 @@ SELECT
   ROUND(100 * nb_prets / SUM(nb_prets) OVER (PARTITION BY variable), 1) AS pct_population,
   nb_mauvais,
   ROUND(100 * nb_mauvais / nb_prets, 2) AS taux_defaut,
-  ROUND(SAFE.LN(pct_bons / pct_mauvais), 3) AS woe,
-  ROUND(SUM((pct_bons - pct_mauvais) * SAFE.LN(pct_bons / pct_mauvais))
+  ROUND(SAFE.LN(SAFE_DIVIDE(pct_bons, pct_mauvais)), 3) AS woe,
+  ROUND(SUM((pct_bons - pct_mauvais) * SAFE.LN(SAFE_DIVIDE(pct_bons, pct_mauvais)))
         OVER (PARTITION BY variable), 3) AS iv_variable
 FROM distributions
 ORDER BY iv_variable DESC, variable, classe
