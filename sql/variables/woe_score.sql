@@ -36,8 +36,8 @@ SELECT
   nb_mauvais,
   ROUND(100 * pct_bons, 2) AS pct_bons,
   ROUND(100 * pct_mauvais, 2) AS pct_mauvais,
-  ROUND(LN(pct_bons / pct_mauvais), 3) AS woe,
-  ROUND((pct_bons - pct_mauvais) * LN(pct_bons / pct_mauvais), 4) AS iv_classe,
-  ROUND(SUM((pct_bons - pct_mauvais) * LN(pct_bons / pct_mauvais)) OVER (), 3) AS iv_total
+  ROUND(LN(SAFE_DIVIDE(pct_bons, pct_mauvais)), 3) AS woe,
+  ROUND((pct_bons - pct_mauvais) * LN(SAFE_DIVIDE(pct_bons, pct_mauvais)), 4) AS iv_classe,
+  ROUND(SUM((pct_bons - pct_mauvais) * LN(SAFE_DIVIDE(pct_bons, pct_mauvais))) OVER (), 3) AS iv_total
 FROM distributions
 ORDER BY classe
